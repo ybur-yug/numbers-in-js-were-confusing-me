@@ -245,7 +245,8 @@ If we dive back into the official specification, we can find these definitions i
 In 20.1.1 we find `The Number Constructor`, which seems to be a reasonable place to start if we are going from the bottom up.
 It reads as follows:
 
-```text
+---
+
 The *Number* constructor is the %Number% intrinsic object and the initial value of the *Number* property of the global object.
 When called as a constructor, it creates and initializes a new *Number* object. When *Number* is called as a function rather than
 as a constructor, it performs a type conversion.
@@ -253,6 +254,7 @@ as a constructor, it performs a type conversion.
 The Number constructor is designed to be subclassable. It may be used as the value of an extends clause of a class definition.
 Subclass constructors that intend to inherit the specified Number behaviour must include a super call to the *Number*
 constructor to create and initialize the subclass instance with a [[NumberData]] internal slot.
-```
+
+---
 
 Now, this is a bit dense. Let's break it down.
