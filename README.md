@@ -86,6 +86,8 @@ Basically, seems like `+0` and `-0` behave just about the same.
 However, there is a new thing I wanted to investigate this with that just came around in ES2015.
 That would be `Object.is`, which returns true if one of more of the following conditions is met: 
 
+---
+
 - both arguments are `Undefined`
 - both arguments are `Null`
 - both arguments are `True` or both `False`
@@ -96,6 +98,8 @@ That would be `Object.is`, which returns true if one of more of the following co
   - both arguments are `-0`
   - both arguments are `NaN`
   - or both arguments are non-zero and both not `NaN` and both have the same value
+
+---
 
 Let's fire up the console again:
 
@@ -120,49 +124,64 @@ The terminology with regard to `Object.is` is quite simple.
 It seems to me that a function extending from `Object` would reasonably only deal with objects.
 However, if we dig in a bit further it quickly becomes clear it is not, as we just saw.
 
-```text
-This is not the same as being equal according to the == operator.
-The == operator applies various coercions to both sides (if they are not the same Type) before testing for equality (resulting in such behavior as "" == false being true), but Object.is doesn't coerce either value.
+---
 
-This is also not the same as being equal according to the === operator.
-The === operator (and the == operator as well) treats the number values -0 and +0 as equal and treats Number.NaN as not equal to NaN.
-```
+This is not the same as being equal according to the `==` operator.
+The `==` operator applies various coercions to both sides (if they are not the same Type) before testing for equality (resulting in such behavior as "" `==` false being true), but Object.is doesn't coerce either value.
+
+This is also not the same as being equal according to the `===` operator.
+The `===` operator (and the `==` operator as well) treats the number values -0 and +0 as equal and treats Number.NaN as not equal to NaN.
+
+---
 
 JavaScript has 6 types of primitives: `Boolean`, `String`, `Null`, `Undefined`, `Symbol` and `Number`.
 A primitive isn't an `Object`, is it?
 Lets take a look at the official specification:
 
-```text
+---
+
 4.3.2 primitive value
+
 member of one of the types Undefined, Null, Boolean, Number, Symbol, or String as defined in clause 6.
 
 NOTE:
+
 A primitive value is a datum that is represented directly at the lowest level of the language implementation.
-```
+
+---
 
 Now, what if we look at the same specification for `Object`?
 
-```text
+---
+
 4.3.3 object
+
 member of the type Object
 
 NOTE:
+
 An object is a collection of properties and has a single prototype object.
 The prototype may be the null value.
-```
+
+---
 
 And from here it only makes sense to see the official definition for a Prototype
 
-```text
+---
+
 4.3.5 prototype
+
 object that provides shared properties for other objects
+
 NOTE:
+
 When a constructor creates an object, that object implicitly references the constructor's prototype property
 for the purpose of resolving property references. The constructor's prototype property can be referenced by
 the program expression constructor.prototype, and properties added to an object's prototype are shared,
 through inheritance, by all objects sharing the prototype. Alternatively, a new object may be created with an
 explicitly specified prototype by using the Object.create built‑in function.
-```
+
+---
 
 So, let's break this down:
 
@@ -179,24 +198,31 @@ Now, what if we take these definitions and go straight to the number specificati
 
 If we poke through our index we get 3 sections back to back that just the title can answer some questions for us.
 
-```text
+---
+
 4.3.20 Number value
+
 primitive value corresponding to a double‑precision 64‑bit binary format IEEE 754‑2008 value
 
 Note:
-A Number value is a member of the Number type and is a direct representation of a number.
+
+A **Number** value is a member of the **Number** type and is a direct representation of a number.
 
 4.3.21 Number type
-set of all possible Number values including the special “Not‑a‑Number” (NaN) value, positive in伀氂inity, and negative in伀氂inity
+
+set of all possible **Number** values including the special “Not‑a‑Number” (NaN) value, positive infinity, and negative infinity
 
 4.3.22 Number object
-member of the Object type that is an instance of the standard built‑in Number constructor
+
+member of the **Object** type that is an instance of the standard built‑in **Number** constructor
 
 Note:
-A Number object is created by using the Number constructor in a new expression, supplying a number value as
-an argument. The resulting object has an internal slot whose value is the number value. A Number object can
-be coerced to a number value by calling the Number constructor as a function (20.1.1.1).
-```
+
+A **Number** object is created by using the **Number** constructor in a new expression, supplying a number value as
+an argument. The resulting object has an internal slot whose value is the number value. A **Number** object can
+be coerced to a number value by calling the **Number** constructor as a function (20.1.1.1).
+
+---
 
 So here we have it, an answer as to if we can consider `Object.is` to be intaking a primitive or `Object` type, as its right here in the spec.
 It seems that a number value is something like `1` or `3` or `-5`.
@@ -247,7 +273,7 @@ It reads as follows:
 
 ---
 
-The **Number** constructor is the %Number% intrinsic object and the initial value of the **Number** property of the global object.
+The **Number** constructor is the `%Number%` intrinsic object and the initial value of the **Number** property of the global object.
 When called as a constructor, it creates and initializes a new **Number** object. When **Number** is called as a function rather than
 as a constructor, it performs a type conversion.
 
