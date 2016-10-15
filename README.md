@@ -100,15 +100,13 @@ That would be `Object.is`, which returns true if one of more of the following co
 Let's fire up the console again:
 
 ```javascript
-> Object.is(-0, +0)
+> Object.is(-0, +0)     // Well, shit
 false
-> Object.is(-0, -0)
+> Object.is(-0, -0)     // Well, this is reasonable
 true
-> Object.is(-0, +0)
+> Object.is(-0, 0)      // Hmmmm
 false
-> Object.is(-0, 0)
-false
-> Object.is(+0, 0)
+> Object.is(+0, 0)      // It seems `0` is aliased as `+0`
 true
 ```
 
@@ -236,7 +234,9 @@ false
 > Object.is(one, 1)
 false
 ```
+
 So now we can see some new stuff.
 The instance of the number Object strictly equals the primitive Number value 1.
 However, `Object.is` declares them as disparate items.
 This isn't quite the behaviour we had earlier but it gives us another track to go down.
+
