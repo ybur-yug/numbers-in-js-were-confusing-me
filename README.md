@@ -140,7 +140,7 @@ Lets take a look at the official specification:
 
 ---
 
-4.3.2 primitive value
+**4.3.2 primitive value**
 
 member of one of the types Undefined, Null, Boolean, Number, Symbol, or String as defined in clause 6.
 
@@ -154,7 +154,7 @@ Now, what if we look at the same specification for `Object`?
 
 ---
 
-4.3.3 object
+**4.3.3 object**
 
 member of the type Object
 
@@ -169,7 +169,7 @@ And from here it only makes sense to see the official definition for a Prototype
 
 ---
 
-4.3.5 prototype
+**4.3.5 prototype**
 
 object that provides shared properties for other objects
 
@@ -200,7 +200,7 @@ If we poke through our index we get 3 sections back to back that just the title 
 
 ---
 
-4.3.20 Number value
+**4.3.20 Number value**
 
 primitive value corresponding to a double‑precision 64‑bit binary format IEEE 754‑2008 value
 
@@ -208,11 +208,11 @@ Note:
 
 A **Number** value is a member of the **Number** type and is a direct representation of a number.
 
-4.3.21 Number type
+**4.3.21 Number type**
 
 set of all possible **Number** values including the special “Not‑a‑Number” (NaN) value, positive infinity, and negative infinity
 
-4.3.22 Number object
+**4.3.22 Number object**
 
 member of the **Object** type that is an instance of the standard built‑in **Number** constructor
 
