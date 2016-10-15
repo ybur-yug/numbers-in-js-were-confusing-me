@@ -1,12 +1,14 @@
-# So I Wondered Something
+# Numbers in JavaScript
+## Sorry, I don't have a clever title
 
-## An Introduction
-The other day, someone one twitter shared a code snippet from the V8 JavaScript engine.
-It was nothing particularly exciting; simply part of the logic for how it handles sorting in arrays.
+### Introduction
+The other day, someone one twitter shared a code snippet from the V8 JavaScript engine that intrigued me.
+It was nothing particularly exciting; simply part of the logic for how it handles sorting in arrays of various sizes.
+For whatever reason I ended up quite interested.
 What intrigued me is that there was a specific cutoff in which they did not do a quicksort algorithm on the array, and rather had some customized logic that handled other array sizes within two bounds.
 I believe they were 22 (the one we are looking at in this window), and something like >= 2000.
 The part that intrigued me was 22.
-Programmers almost always tend to pick powers of 2 when selecting arbitrary fill-in values in which a general range would be okay.
+Programmers almost seem to always tend to pick powers of 2 when selecting arbitrary fill-in values in which a general range would be okay.
 This almost definitely had to be there because of some benchmark that was worth attaining; which is perfectly sensical for a JavaScript engine.
 
 The particular block that caught my eye is [this](https://github.com/v8/v8/blob/ca6e40d7ba853319c15196fef3f4536c8b3929fe/test/mjsunit/array-sort.js#L423):
@@ -31,34 +33,73 @@ function TestSortDoesNotDependOnArrayPrototypePush() {
 
 Now, this is a little interesting just because of the implementation details. 
 Okay, so we have something we do for super short arrays, and something else for giant ones.
-I spelunked a bit more looking at sorting stuff and found another interesting tidbit that ended up sending me down a wormhole.
-You can see it [here](https://github.com/v8/v8/commit/57415753#diff-cd88fdcb48e2c895640a630ca5b05ac2R369), and boy did it sent me through a loop.
+I spelunked a bit more looking at sorting stuff and found another tidbit that ended up sending me down the wormhole we are about to summarize and attempt to understand.
+You can see it [here](https://github.com/v8/v8/commit/57415753#diff-cd88fdcb48e2c895640a630ca5b05ac2R369), and boy did it sent me through a loop at first.
 
 ```javascript
+...
 var arr = [o(1), o(2), o(4), o(8), o(16), o(32), o(64), o(128), o(256), o(-0)]
+...
 ```
 
-A list of an array length `-0`.
-This isn't what this code is doing it all but it just got me thinking about some implementation details.
+An array length `-0`.
+Now, maybe its because I lack a pure CS background or haven't read the IEEE 754 double precision floating point specification quite closely enough, but this is something I hadn't seen before.
 
-## Investigating
-Let's open the console and poke around with `-0`.
+### Wtf is -0? Let's look at numbers in JS
+Let's start by just messing around in the console
 
 ```javascript
-> -0 === 0
+> -0 === 0     // I always start with strict equality, because JS
 true
-> -0 == +0
+> -0 == 0      // As expected
 true
-> -0 === +0
+> -0 == +0     // Alright....maybe its just because `==`
 true
-> -0 / 0
+> -0 === +0    // Well...shit
+true
+> -0 / 0       // Reasonable
 NaN
-> -0 / 1
+> -0 / 1       // Okay..
 -0
-> 1 / -0
+> 1 / -0       // as expected
 -Infinity
-> 1 / +0
+> 1 / +0       // Normal Enough
 Infinity
+> +0 == 0      // Alright, the inverse of our first bit works
+true
+> +0 === 0     // And confirms itself.
+true
+```
+
+There is nothing _really_ weird here, really.
+I began by comparing `0` and `-0` strictly, just to see if there was a difference in the sense of arithmetic.
+With it and the regular `==` comparison operator, it seems so far there is not a meaningful difference in the context of maths.
+Now, if we have `-0` I assumed that the inverse must exist, so I tried `+0`.
+I didnt _actually know_ if `+0` existed at this point but my assumption was correct.
+I then thought maybe it would be different if I compared the two themselves strictly.
+Maybe this would finally give me something interesting!
+But nope, just another simple truth.
+Next I wanted to see if division behaved properly, and it seemed to.
+Last but not least was just investigating if `+0` behaved like `-0` and wasn't just equal, unsurprising.
+
+Basically, seems like `+0` and `-0` behave just about the same.
+However, there is a new thing I wanted to investigate this with that just came around in ES2015.
+That would be `Object.is`, which returns true if one of more of the following conditions is met: 
+
+- both arguments are `Undefined`
+- both arguments are `Null`
+- both arguments are `True` or both `False`
+- both arguments are `String` primitives of the same length with the same characters
+- both arguments are the same `Object`
+- both arguments are `Number` types and
+  - both arguments are `+0`
+  - both arguments are `-0`
+  - both arguments are `NaN`
+  - or both arguments are non-zero and both not `NaN` and both have the same value
+
+Let's fire up the console again:
+
+```javascript
 > Object.is(-0, +0)
 false
 > Object.is(-0, -0)
@@ -67,85 +108,19 @@ true
 false
 > Object.is(-0, 0)
 false
-> +0 == 0
-true
-> +0 === 0
-true
 > Object.is(+0, 0)
 true
 ```
 
-So there are a few layers here.
-Let's break this down into a few chunks that we can cherry-pick through:
+So this behaves as expected.
+But, if we think about JavaScript, you might remember that it has what we call the concept of `primitives`.
+Now, is a `primitive` an `Object`?
+Well, lets dive in...
 
-```javascript
-// so is -0 the same as 0?
-> -0 === 0
-// seems to be so...what about 0?
-true
-// okay, cool, what about +0?
-> -0 == +0
-true
-// neat, so wtf is the difference then? why do we have this?
-> -0 === +0
-true
-// well it seems this is just all the same
-// is +0 like this too?
-> +0 == 0
-true
-> +0 === 0
-// does it break division???
-> -0 / 0
-// ok...
-NaN
-> -0 / 1
-// ok...
--0
-// so do we break division in the expected manner?
-> 1 / -0
--Infinity
-// seems to be so...
-> 1 / +0
-Infinity
-> 1 / 0
-Infinity
-// one last test
-> 0 / 0
-Nan
-> +0 / 0
-NaN
-> -0 / 0
-NaN
-```
-
-So what we can gather here is that +0 and -0 seem to behave in quite the similar way.
-It appears these zeroes all just look and act alike.
-
-## `Object.is`
-However, in the new world of JS as of ES2015 there was a new function intoduced called `Object.is`.
-`Object.is` is a function that takes two arguments and simply tells you if they are **really** the same.
-The function returns true if one or more of the following is correct.
-
-```text
-- both undefined
-- both null
-- both true or both false
-- both strings of the same length with the same characters
-- both the same object
-- both numbers and
-  - both +0
-  - both -0
-  - both NaN
-  - or both non-zero and both not NaN and both have the same value
-```
-
-Now, why is this?
-I really don't know yet, I'm still investigating.
-But I have some fundamental questions I would like to understand that are coming of this.
-The terminology `Object.is` is quite simple.
+### Primitives and Objects
+The terminology with regard to `Object.is` is quite simple.
 It seems to me that a function extending from `Object` would reasonably only deal with objects.
-However, if we dig in a bit further it quickly becomes clear it is not.
-From [the Mozilla Developer Network page](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) we can dig in even further:
+However, if we dig in a bit further it quickly becomes clear it is not, as we just saw.
 
 ```text
 This is not the same as being equal according to the == operator.
@@ -155,11 +130,9 @@ This is also not the same as being equal according to the === operator.
 The === operator (and the == operator as well) treats the number values -0 and +0 as equal and treats Number.NaN as not equal to NaN.
 ```
 
-So this got me thinking even further.
-I wanted to start off understanding why `Object.is` behaves differently, but I began to think of something else.
 JavaScript has 6 types of primitives: `Boolean`, `String`, `Null`, `Undefined`, `Symbol` and `Number`.
 A primitive isn't an `Object`, is it?
-I took a look at the official specification:
+Lets take a look at the official specification:
 
 ```text
 4.3.2 primitive value
@@ -199,14 +172,13 @@ So, let's break this down:
 - I know that primitives in other languages have a fixed allocation of memory. Java is a good example of this.
 - Objects can be the null value, and this is a primitive. So maybe a primitive is an `Object`?
 - All primitives arent the same though, so `null` might be the exception and not the rule
-- It seems prototypes make everythingA
+- It seems prototypes make everything
 - Null might sort of be an object but none of the other primitives (including the set of **all** numbers in JavaScript) are not, seemingly
 
 So when I really started to think about this it seemed that it was just quite strange that `Object.is` would take a primitive as an argument because primitives, outside `null`, from what I have seen thus far are not at all in fact `Object` types,
-However, I thought maybe next it was best I ignore this and instead try to grok `-0` and `+0` even if there is another weird thing I want to investigate.
 
-## Numbers In JavaScript (Specifically,`0` and its cousins)
-This is where it starts to get interesting.
+Now, what if we take these definitions and go straight to the number specification with this knowledge?
+
 If we poke through our index we get 3 sections back to back that just the title can answer some questions for us.
 
 ```text
@@ -268,5 +240,3 @@ So now we can see some new stuff.
 The instance of the number Object strictly equals the primitive Number value 1.
 However, `Object.is` declares them as disparate items.
 This isn't quite the behaviour we had earlier but it gives us another track to go down.
-
-
