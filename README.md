@@ -2,7 +2,7 @@
 ## Sorry, I don't have a clever title
 
 ### Introduction
-The other day, someone one twitter shared a code snippet from the V8 JavaScript engine that intrigued me.
+The other day, someone one twitter shared a code snippet from the V8 JavaScript engine that got me thinking.
 It was nothing particularly exciting; simply part of the logic for how it handles sorting in arrays of various sizes.
 For whatever reason I ended up quite interested.
 What intrigued me is that there was a specific cutoff in which they did not do a quicksort algorithm on the array, and rather had some customized logic that handled other array sizes within two bounds.
@@ -240,3 +240,19 @@ The instance of the number Object strictly equals the primitive Number value 1.
 However, `Object.is` declares them as disparate items.
 This isn't quite the behaviour we had earlier but it gives us another track to go down.
 
+Let's start by just trying to understand numbers as a whole in the language.
+If we dive back into the official specification, we can find these definitions in section 20.
+In 20.1.1 we find `The Number Constructor`, which seems to be a reasonable place to start if we are going from the bottom up.
+It reads as follows:
+
+```text
+The *Number* constructor is the %Number% intrinsic object and the initial value of the *Number* property of the global object.
+When called as a constructor, it creates and initializes a new *Number* object. When *Number* is called as a function rather than
+as a constructor, it performs a type conversion.
+
+The Number constructor is designed to be subclassable. It may be used as the value of an extends clause of a class definition.
+Subclass constructors that intend to inherit the specified Number behaviour must include a super call to the *Number*
+constructor to create and initialize the subclass instance with a [[NumberData]] internal slot.
+```
+
+Now, this is a bit dense. Let's break it down.
