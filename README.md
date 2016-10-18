@@ -284,3 +284,5 @@ constructor to create and initialize the subclass instance with a `[[NumberData]
 ---
 
 Now, this is a bit dense. Let's break it down.
+
+## Yeaaaaah this got deeper than I thought, WIP research still going, hopefully I get to the bottom of this and answer my own questions competently.
