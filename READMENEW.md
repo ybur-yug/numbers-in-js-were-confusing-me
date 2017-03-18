@@ -93,3 +93,10 @@ A primitive is not an object per the specification's definition, seemingly, as a
 #### Not-Quite-Typical Points: 3
 
 
+### Go into what is an object
+### Go to prototype (specifically NULL stuff)
+### Go to Number Object defintition
+### Tie into prototype
+### Go to last part of current doc
+### Go into Number constructor
+### Go into the whole point of how software gets complicated
