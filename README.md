@@ -20,7 +20,7 @@ If takes two arguments, and _if and only if_ they are both numbers, then it will
 It does not mutate the numbers.
 It simply returns a new number and leaves those two other pieces alone to frolic as they please in the bit-forest.
 
-In this post, we will examine something (seemingly) simple.
+In this post, we will examine something (seemingly) simple along these same lines.
 We will then learn a lesson.
 
 ## An Applied example
