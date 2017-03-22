@@ -31,7 +31,7 @@ These are `Undefined`, `Null`, `Boolean`, `Number`, `Symbol`, or `String`.
 Here, we will examine the `Number` primitive.
 
 ### A Starting Dive
-The official ECMAScript 2016 specification says this in its definitions:
+The official ECMAScript 2016 specification says this in its definitions about `Primitive` type values:
 
 
 > 4.3.2 primitive value
@@ -39,13 +39,15 @@ The official ECMAScript 2016 specification says this in its definitions:
 > NOTE:
 > A primitive value is a datum that is represented directly at the lowest level of the language implementation.
 
-There are also some subtleties to numbers in JavaScript, primarily because it turns out that rather than having a dedicated concept of an Integer, JavaScript only has floating points, as defined per the IEEE 754 Double Precision Float specification.
+There are also some subtleties to numbers in JavaScript, primarily because it turns out that rather than having a dedicated concept of an `Integer`, JavaScript only has floating point numbers, as defined per the IEEE 754 Double Precision Float specification.
 
-#### Not-Quite-Typical Points: 1
-
-One of the interesting consequences of all numbers following this specification is the presence of signed zero.
+#### Not-Quite-Simple Points: 1
+Because everything is floats, we have the presence of a signed zero.
+Signed zero just means that we have `+0`, `-0`, and `0` all defined and they have certain requirements.
 The specification requres both `+0` and `-0` be defined. `1 / -0` should be `-infinity` and `1/+0` should be `+infinity`, while being undefined for `+0 / +0` and `+infinity / -infinity`.
 Let's open up a shell and examine this.
+
+To start, lets look at basic equality:
 
 ```javascript
 > -0 === 0
@@ -64,6 +66,7 @@ true
 true
 > +0 == -0
 ```
+
 Okay, but what about our division rules?
 
 ```javascript
@@ -82,6 +85,7 @@ NaN
 ```
 
 Everything fits.
+Awesome.
 
 ### A Bit Deeper
 However, beyond `==` and `===`, there is another way in JavaScript to strictly compare two things, called `Object.is`.
@@ -96,7 +100,7 @@ Object.is(0, +0)
 true
 ```
 
-#### Not-Quite-Typical Points: 2
+#### Not-Quite-Simple Points: 2
 
 Now this is a bit interesting. `0` and `-0` are not considered equal by this setup.
 But what exactly _is_ `Object.is`?
@@ -120,7 +124,7 @@ We dont even have to go in the _why_ of this, because something is quite strange
 Why would a function `Object.is`, _if a number is truly a primitive_, do _anything_ except throw a type error of some sort?
 A primitive is not an object per the specification's definition, seemingly, as an object is certainly _not_ one of the types `Undefined, Null, Boolean, Number, Symbol, or String`.
 
-#### Not-Quite-Typical Points: 3
+#### Not-Quite-Simple Points: 3
 
 ### Objects
 So, maybe a function `Object.is` might take things that are not an Object, even though its intention to compare two objects.
@@ -146,11 +150,14 @@ Let's look at what we have learned so far.
 - Prototypes seem to be the root of most everything
 
 This `Prototype` can be `Null` thing seems a bit odd, since `Null` is supposed to be a primitive and `Prototype` is stated to be an object.
-
+It turns out, after diving into the `Prototype` spec, we can find another interesting tidbit:
 #### Not-Quite-Typical Points: 4
 
+*There is a `Number` object*
 
-### Go to Number Object defintition
+#### Not-Quite-Typical Points: 5
+
+### The Number Object
 ### Prototypes and Constructors
 ### Go to last part of current doc
 ### Go into Number constructor
