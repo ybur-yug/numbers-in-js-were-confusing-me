@@ -150,8 +150,10 @@ Let's look at what we have learned so far.
 - Prototypes seem to be the root of most everything
 
 This `Prototype` can be `Null` thing seems a bit odd, since `Null` is supposed to be a primitive and `Prototype` is stated to be an object.
-It turns out, after diving into the `Prototype` spec, we can find another interesting tidbit:
+
 #### Not-Quite-Typical Points: 4
+
+It turns out, after diving into the `Prototype` spec, we can find another interesting tidbit:
 
 *There is a `Number` object*
 
