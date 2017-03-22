@@ -7,7 +7,7 @@ Rich Hickey gives a great talk in which he brings up a definition of simple that
 I find that understanding the opposite of complexity has been key in me understanding it in a real way.
 He speaks of how the roots of the word 'simple' are `sim` and `plex`, which mean 'one twist or braid'.
 This is quite easy to wrap our mind around.
-If something is truly simple, it has one twist to it.
+If something is truly simple, it has one twist (result) to it.
 A great example would be a very basic addition function:
 
 ```
