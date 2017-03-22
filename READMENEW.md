@@ -151,13 +151,13 @@ Let's look at what we have learned so far.
 
 This `Prototype` can be `Null` thing seems a bit odd, since `Null` is supposed to be a primitive and `Prototype` is stated to be an object.
 
-#### Not-Quite-Typical Points: 4
+#### Not-Quite-Simple Points: 4
 
 It turns out, after diving into the `Prototype` spec, we can find another interesting tidbit:
 
 *There is a `Number` object*
 
-#### Not-Quite-Typical Points: 5
+#### Not-Quite-Simple Points: 5
 
 ### The Number Object
 ### Prototypes and Constructors
