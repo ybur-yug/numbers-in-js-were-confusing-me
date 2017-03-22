@@ -164,5 +164,20 @@ It turns out, after diving into the `Prototype` spec, we can find another intere
 ### Go to last part of current doc
 ### Go into Number constructor
 
-## Epic Conclusion of Sorts
+## Conclusion
+We didn't even _really answer_ all the questions that were just brought up in that entire dive.
+If you're like me, you're probably quite confused and have even more questions jotted down.
 
+What we did was look at a `Primitive`.
+These are the means of construction in the language.
+By diving into the true identity of something that is the most basic building block, we have unraveled a web of observations, idiosyncrasies, and new pieces of knowledge to work off of.
+This isn't because JavaScript is bad, or because Brendan Eich really is plotting our demise as software developers.
+It is because complexity is a reality of systems.
+Our job is to manage it.
+When things get to a certain point, large decisions might be made to take new directions.
+One could look at CofeeScript, TypeScript, Elm, and the myriad of other JS replacements I am not listing and conclude that there may be an issue at the origin here.
+However that is beside the point.
+
+These realities are inevitably going to be a part of systems we build.
+Our job is to manage complexity, not to eliminate it.
+It is a Sisyphean endeavour to try for the latter idea.
