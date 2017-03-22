@@ -1,8 +1,36 @@
-# Numbers, JavaScript.
+# Complexity & It's Origins
 
 ## Introduction
-In JavaScript, a number of any sort is typically considered a `primitive`.
-This generally is the simplest unit of a language.
+Complexity is an inherent reality when dealing with any form of _stuff_ that is constructed.
+The key word here is _constructed_, as when things are defined in very basic terms with little abstraction, complexity cannot really creep in.
+Rich Hickey gives a great talk in which he brings up a definition of simple that I have found to be my favorite.
+I find that understanding the opposite of complexity has been key in me understanding it in a real way.
+He speaks of how the roots of the word 'simple' are `sim` and `plex`, which mean 'one twist or braid'.
+This is quite easy to wrap our mind around.
+If something is truly simple, it has one twist to it.
+A great example would be a very basic addition function:
+
+```
+def add(x, y) when is_number(x) and is_number(y), do: x + y
+```
+
+Let's look at this function.
+
+If takes two arguments, and _if and only if_ they are both numbers, then it will add them.
+It does not mutate the numbers.
+It simply returns a new number and leaves those two other pieces alone to frolic as they please in the bit-forest.
+
+In this post, we will examine something (seemingly) simple.
+We will then learn a lesson.
+
+## An Applied example
+Primitives are generally defined as something along the lines of 'the simplest possible component of a system'.
+JavaScript has 6 types of primitives, in its latest form.
+These are `Undefined`, `Null`, `Boolean`, `Number`, `Symbol`, or `String`.
+`Number` is a good entrypoint to examine something as a whole that is simple.
+Here, we will examine the `Number` primitive.
+
+### A Starting Dive
 The official ECMAScript 2016 specification says this in its definitions:
 
 
@@ -54,6 +82,8 @@ NaN
 ```
 
 Everything fits.
+
+### A Bit Deeper
 However, beyond `==` and `===`, there is another way in JavaScript to strictly compare two things, called `Object.is`.
 Let's see what it thinks of how these zeroes compare:
 
@@ -92,11 +122,38 @@ A primitive is not an object per the specification's definition, seemingly, as a
 
 #### Not-Quite-Typical Points: 3
 
+### Objects
+So, maybe a function `Object.is` might take things that are not an Object, even though its intention to compare two objects.
+The specification's definition is actually quite simple:
 
-### Go into what is an object
-### Go to prototype (specifically NULL stuff)
+> 4.3.3 object
+> member of the type Object
+> NOTE:
+> An object is a collection of properties and has a single prototype object. The prototype may be the null value.
+
+Now, this specifically says an Object has a single `prototype` object.
+This wording implies that a prototype is definitely not a primitive like a number, and is a type of object, so let's investigate it:
+
+> 4.3.5 prototype
+> object that provides shared properties for other objects
+> NOTE:
+> When a constructor creates an object, that object implicitly references the constructor's prototype property for the purpose of resolving property references. The constructor's prototype property can be referenced by the program expression constructor.prototype, and properties added to an object's prototype are shared, through inheritance, by all objects sharing the prototype. Alternatively, a new object may be created with an explicitly specified prototype by using the Object.create built‑in function.
+
+Let's look at what we have learned so far.
+
+- Primitives are supposed to be the simplets possible thing in the language, defined at the lowest level
+- An `Object`'s `Prototype` may be `Null`, which is technically considered a primitive per the definitions we got from the spec
+- Prototypes seem to be the root of most everything
+
+This `Prototype` can be `Null` thing seems a bit odd, since `Null` is supposed to be a primitive and `Prototype` is stated to be an object.
+
+#### Not-Quite-Typical Points: 4
+
+
 ### Go to Number Object defintition
-### Tie into prototype
+### Prototypes and Constructors
 ### Go to last part of current doc
 ### Go into Number constructor
-### Go into the whole point of how software gets complicated
+
+## Epic Conclusion of Sorts
+
